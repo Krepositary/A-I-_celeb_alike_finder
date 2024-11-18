@@ -4,8 +4,8 @@ pip install --upgrade numpy opencv-python-headless
 import numpy as np
 from PIL import Image
 
-import cv2
-print(cv2.__version__)
+import cv
+print(cv.__version__)
 
 from PIL import Image
 import numpy as np
