@@ -1,6 +1,8 @@
 import numpy as np
 from PIL import Image
+
 import cv2
+print(cv2.__version__)
 
 def preprocess_image(image_file):
     # Convert to OpenCV format
