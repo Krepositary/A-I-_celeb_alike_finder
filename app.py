@@ -1,4 +1,6 @@
 import streamlit as st
+import cv2
+print(cv2.__version__)
 from utils import preprocess_image, load_celebrity_data
 from model import find_celebrity_match, generate_funny_caption
 
