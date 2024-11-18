@@ -1,30 +1,36 @@
+import face_recognition
 import numpy as np
-import cv
-print(cv.__version__)
-from keras.models import load_model
-from sklearn.metrics.pairwise import cosine_similarity
 
-# Load pre-trained model
-face_model = load_model("path/to/your/facenet_model.h5")
+# Preload celebrity data
+def load_celebrity_data():
+    # Load your celebrity images and encode their faces
+    celebrities = {
+        "celebrity_name_1": face_recognition.load_image_file("celebrity1.jpg"),
+        "celebrity_name_2": face_recognition.load_image_file("celebrity2.jpg"),
+        # Add more celebrities as needed
+    }
 
-# Load celebrity embeddings
-celeb_embeddings = np.load("celebrity_data/celeb_embeddings.npy")
-celeb_names = load_celebrity_data()
+    celebrity_encodings = {name: face_recognition.face_encodings(image)[0] for name, image in celebrities.items()}
+    return celebrity_encodings
 
-def find_celebrity_match(image):
-    # Extract features from the image
-    image_embedding = face_model.predict(image)
-    
-    # Compute similarity with celebrity embeddings
-    similarities = cosine_similarity(image_embedding, celeb_embeddings)
-    best_match_idx = np.argmax(similarities)
-    
-    return celeb_names[best_match_idx], similarities[0][best_match_idx]
+# Find the celebrity match
+def find_celebrity_match(uploaded_face_encoding, celebrity_encodings):
+    # Compare the uploaded face encoding with celebrity encodings
+    best_match_name = None
+    best_match_score = 0
 
-def generate_funny_caption(celebrity_name, similarity_score):
-    captions = [
-        f"You look just like a younger version of {celebrity_name}!",
-        f"{celebrity_name} wishes they looked this good!",
-        f"Are you secretly {celebrity_name} in disguise?",
-    ]
-    return captions[int(similarity_score * len(captions)) % len(captions)]
+    for celebrity, celebrity_encoding in celebrity_encodings.items():
+        results = face_recognition.compare_faces([celebrity_encoding], uploaded_face_encoding)
+        face_distance = face_recognition.face_distance([celebrity_encoding], uploaded_face_encoding)[0]
+
+        if results[0]:
+            match_score = 1 - face_distance
+            if match_score > best_match_score:
+                best_match_score = match_score
+                best_match_name = celebrity
+
+    return best_match_name, best_match_score
+
+# Generate a funny caption based on the celebrity name
+def generate_funny_caption(celebrity_name):
+    return f"You look just like a younger version of {celebrity_name}! 😂"
