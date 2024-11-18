@@ -1,3 +1,6 @@
+pip install numpy==1.21.4 opencv-python-headless
+pip install --upgrade numpy opencv-python-headless
+
 import numpy as np
 from PIL import Image
 
