@@ -4,14 +4,17 @@ from PIL import Image
 import cv2
 print(cv2.__version__)
 
+from PIL import Image
+import numpy as np
+
 def preprocess_image(image_file):
-    # Convert to OpenCV format
+    # Open the image using PIL
     image = Image.open(image_file)
     image = image.convert("RGB")
-    image = np.array(image)
-    image = cv2.resize(image, (160, 160))  # Required size for FaceNet
-    image = image / 255.0
+    image = image.resize((160, 160))  # Resize to match model input
+    image = np.array(image) / 255.0  # Normalize pixel values
     return np.expand_dims(image, axis=0)
+
 
 def load_celebrity_data():
     # Load celebrity names from a JSON or CSV file
