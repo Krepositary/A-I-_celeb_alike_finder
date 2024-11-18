@@ -4,23 +4,20 @@ pip install --upgrade numpy opencv-python-headless
 import numpy as np
 from PIL import Image
 
-import cv
-print(cv.__version__)
-
 from PIL import Image
 import numpy as np
+import face_recognition
+import io
 
-def preprocess_image(image_file):
-    # Open the image using PIL
-    image = Image.open(image_file)
+# Preprocess the uploaded image to be used for face recognition
+def preprocess_image(uploaded_file):
+    # Open the uploaded image file
+    image = Image.open(uploaded_file)
+    # Convert the image to RGB (if it isn't already)
     image = image.convert("RGB")
-    image = image.resize((160, 160))  # Resize to match model input
-    image = np.array(image) / 255.0  # Normalize pixel values
-    return np.expand_dims(image, axis=0)
+    # Convert to numpy array
+    image_array = np.array(image)
+    
+    # Use face_recognition to find face encodings
+    return image_array
 
-
-def load_celebrity_data():
-    # Load celebrity names from a JSON or CSV file
-    with open("celebrity_data/celeb_names.json", "r") as f:
-        celeb_names = json.load(f)
-    return celeb_names
