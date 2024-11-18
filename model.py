@@ -1,4 +1,6 @@
 import numpy as np
+import cv2
+print(cv2.__version__)
 from keras.models import load_model
 from sklearn.metrics.pairwise import cosine_similarity
 
